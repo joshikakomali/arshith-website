@@ -202,6 +202,8 @@ export default function Careers() {
               <textarea placeholder="Tell us about yourself and why you'd like to join us" rows="5" required></textarea>
             </div>
 
+            
+
             <button type="submit" className="btn btn-primary" style={{ width: "100%", justifyContent: "center" }}>
               Submit Application
             </button>
