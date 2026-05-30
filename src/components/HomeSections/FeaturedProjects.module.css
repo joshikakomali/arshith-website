@@ -1,0 +1,255 @@
+.sectionContainer {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--bg-dark);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.introHeader {
+  position: absolute;
+  top: 8%;
+  left: 8%;
+  z-index: 10;
+  max-width: 500px;
+}
+
+.eyebrow {
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--accent);
+  letter-spacing: 3px;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: 38px;
+  font-weight: 800;
+  color: var(--text-main);
+  line-height: 1.2;
+}
+
+.scrollWrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-left: 8%;
+  padding-right: 8%;
+  width: max-content;
+  height: 60%;
+  margin-top: 10vh;
+}
+
+.projectCard {
+  width: 420px;
+  height: 100%;
+  margin-right: 40px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.03);
+  transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s;
+}
+
+.projectCard:hover {
+  transform: translateY(-8px);
+  border-color: rgba(37, 99, 235, 0.3);
+  box-shadow: 0 30px 60px rgba(37, 99, 235, 0.08), 0 20px 45px rgba(0, 0, 0, 0.03);
+}
+
+.imageFrame {
+  position: relative;
+  width: 100%;
+  height: 55%;
+  overflow: hidden;
+}
+
+.projectImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.projectCard:hover .projectImage {
+  transform: scale(1.08);
+}
+
+.imageOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 50%, rgba(255, 255, 255, 0.08) 100%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.projectInfo {
+  padding: 24px 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 1;
+}
+
+.projectCategory {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.projectTitle {
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1.3;
+  margin-bottom: 10px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.projectDesc {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Call to action card at end */
+.moreCard {
+  width: 320px;
+  height: 100%;
+  background: rgba(37, 99, 235, 0.03);
+  border: 1px dashed rgba(37, 99, 235, 0.25);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.02);
+}
+
+.moreContent {
+  text-align: center;
+}
+
+.moreContent h3 {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  color: var(--text-main);
+  margin-bottom: 12px;
+}
+
+.moreContent p {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+.moreBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 50px;
+  background: var(--accent);
+  color: #ffffff;
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+  transition: all 0.3s ease;
+}
+
+.moreBtn:hover {
+  background: #1d4ed8;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+}
+
+/* Responsive configurations */
+@media (max-width: 1024px) {
+  .projectCard {
+    width: 350px;
+  }
+}
+
+/* Tablet & Mobile Breakpoint - Disable GSAP Pin and switch to native scroll */
+@media (max-width: 768px) {
+  .sectionContainer {
+    height: auto;
+    padding: 90px 6%;
+    display: block;
+    overflow: visible;
+  }
+
+  .introHeader {
+    position: relative;
+    top: 0;
+    left: 0;
+    margin-bottom: 35px;
+  }
+
+  .title {
+    font-size: 32px;
+  }
+
+  .scrollWrapper {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-left: 0;
+    padding-right: 0;
+    width: 100%;
+    height: 420px;
+    margin-top: 0;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Hide scrollbars */
+  }
+
+  .scrollWrapper::-webkit-scrollbar {
+    display: none;
+  }
+
+  .projectCard {
+    width: 290px;
+    height: 100%;
+    margin-right: 20px;
+    flex-shrink: 0;
+  }
+  
+  .moreCard {
+    width: 260px;
+    height: 100%;
+    flex-shrink: 0;
+    padding: 25px;
+  }
+  
+  .projectInfo {
+    padding: 20px;
+  }
+}

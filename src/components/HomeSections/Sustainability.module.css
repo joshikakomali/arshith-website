@@ -1,0 +1,238 @@
+.section {
+  padding: 140px 8%;
+  background: var(--bg-dark);
+  color: var(--text-main);
+  position: relative;
+  overflow: hidden;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 0.95fr 1.05fr;
+  gap: 80px;
+  align-items: center;
+}
+
+/* Image Column Parallax */
+.imageColumn {
+  position: relative;
+}
+
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 0.85;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--border);
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 50%, rgba(255, 255, 255, 0.15) 100%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.parallaxImage {
+  width: 100%;
+  height: 112%; /* Accommodate parallax movement */
+  object-fit: cover;
+  position: absolute;
+  top: -10%;
+  left: 0;
+  z-index: 1;
+}
+
+.floatingCard {
+  position: absolute;
+  bottom: 40px;
+  left: 40px;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  z-index: 3;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04);
+  max-width: 80%;
+}
+
+.floatingCard i {
+  font-size: 24px;
+  color: var(--accent);
+}
+
+.floatingCard h4 {
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 2px;
+}
+
+.floatingCard p {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Content Column progressive text */
+.contentColumn {
+  display: flex;
+  flex-direction: column;
+}
+
+.eyebrow {
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--accent);
+  letter-spacing: 3px;
+  margin-bottom: 20px;
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: 50px;
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 25px;
+}
+
+.title span {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.desc {
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--text-muted);
+  margin-bottom: 40px;
+}
+
+.featureGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  margin-bottom: 45px;
+}
+
+.featureItem {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.iconBox {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: rgba(37, 99, 235, 0.05);
+  border: 1px solid rgba(37, 99, 235, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.iconBox i {
+  font-size: 18px;
+  color: var(--accent);
+}
+
+.featureItem h4 {
+  font-family: var(--font-heading);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 4px;
+}
+
+.featureItem p {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-muted);
+  max-width: 90%;
+}
+
+/* Logo Block */
+.logoBlock {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border-top: 1px solid var(--border);
+  padding-top: 35px;
+}
+
+.logo {
+  max-height: 48px;
+  width: auto;
+}
+
+.badgeText {
+  display: flex;
+  flex-direction: column;
+}
+
+.badgeText strong {
+  font-family: var(--font-heading);
+  font-size: 15px;
+  color: var(--text-main);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.badgeText span {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Responsive configurations */
+@media (max-width: 1024px) {
+  .container {
+    gap: 50px;
+  }
+  .title {
+    font-size: 40px;
+  }
+}
+
+@media (max-width: 900px) {
+  .container {
+    grid-template-columns: 1fr;
+    gap: 60px;
+  }
+  .imageWrapper {
+    width: 70%;
+    aspect-ratio: 1.1;
+    margin: 0 auto;
+  }
+  .floatingCard {
+    bottom: 20px;
+    left: 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .section {
+    padding: 90px 6%;
+  }
+  .imageWrapper {
+    width: 100%;
+    aspect-ratio: 1;
+  }
+  .title {
+    font-size: 32px;
+  }
+}

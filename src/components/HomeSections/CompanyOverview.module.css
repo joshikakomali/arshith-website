@@ -1,0 +1,218 @@
+.section {
+  padding: 140px 8%;
+  background: var(--bg-dark);
+  color: var(--text-main);
+  position: relative;
+  overflow: hidden;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.eyebrow {
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--accent);
+  letter-spacing: 3px;
+  margin-bottom: 20px;
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: 50px;
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 25px;
+  color: var(--text-main);
+}
+
+.title span {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.desc {
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--text-muted);
+  margin-bottom: 40px;
+  max-width: 600px;
+}
+
+/* Quote Layout */
+.quoteWrapper {
+  background: var(--bg-card);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 40px;
+  position: relative;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.03);
+}
+
+.quoteMark {
+  font-family: var(--font-heading);
+  font-size: 90px;
+  color: rgba(37, 99, 235, 0.08);
+  position: absolute;
+  top: -15px;
+  left: 25px;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.quoteText {
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--text-main);
+  font-style: italic;
+  margin-bottom: 25px;
+  position: relative;
+  z-index: 2;
+}
+
+.quoteText span {
+  color: var(--accent);
+  font-weight: 600;
+  font-style: normal;
+}
+
+.quoteAuthor {
+  margin-bottom: 30px;
+  border-left: 2px solid var(--accent);
+  padding-left: 15px;
+}
+
+.quoteAuthor h4 {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  color: var(--text-main);
+  margin-bottom: 40px;
+  margin-bottom: 4px;
+}
+
+.quoteAuthor span {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.btnOutline {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 28px;
+  border-radius: 50px;
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-main);
+  background: transparent;
+  border: 1px solid var(--border);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  width: fit-content;
+}
+
+.btnOutline:hover {
+  background: rgba(0, 0, 0, 0.02);
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+}
+
+.btnOutline i {
+  transition: transform 0.3s;
+}
+
+.btnOutline:hover i {
+  transform: translateX(4px);
+}
+
+/* Image Column with Parallax Frame */
+.imageColumn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.imageFrame {
+  position: relative;
+  width: 90%;
+  aspect-ratio: 0.85;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--border);
+}
+
+.imageOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 60%, rgba(255, 255, 255, 0.15) 100%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.ceoImage {
+  width: 100%;
+  height: 115%; /* Extra height to accommodate scroll translation */
+  object-fit: cover;
+  position: absolute;
+  top: -15%;
+  left: 0;
+  z-index: 1;
+}
+
+/* Responsive layout adjustments */
+@media (max-width: 1100px) {
+  .container {
+    gap: 50px;
+  }
+  .title {
+    font-size: 42px;
+  }
+}
+
+@media (max-width: 960px) {
+  .section {
+    padding: 100px 6%;
+  }
+  .container {
+    grid-template-columns: 1fr;
+    gap: 60px;
+  }
+  .imageColumn {
+    order: -1; /* Display CEO image first on mobile/tablet */
+  }
+  .imageFrame {
+    width: 70%;
+    aspect-ratio: 1;
+  }
+}
+
+@media (max-width: 600px) {
+  .imageFrame {
+    width: 100%;
+  }
+  .quoteWrapper {
+    padding: 30px 20px;
+  }
+  .title {
+    font-size: 34px;
+  }
+}
