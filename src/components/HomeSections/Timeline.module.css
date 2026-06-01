@@ -203,7 +203,7 @@
   }
 
   .nodeWrapper {
-    left: 40px;
+    left: -40px;
     top: 50px;
     transform: translate(-50%, -50%);
   }

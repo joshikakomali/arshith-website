@@ -127,6 +127,9 @@ export default function Navbar() {
             <Link to="/careers" className={isActive("/careers") ? "active" : ""} onClick={toggleMenu}>Careers</Link>
           </li>
           <li>
+            <Link to="/internship" className={isActive("/internship") ? "active" : ""} onClick={toggleMenu}>Internship</Link>
+          </li>
+          <li>
             <Link to="/contact" className={isActive("/contact") ? "active" : ""} onClick={toggleMenu}>Contact</Link>
           </li>
         </ul>
