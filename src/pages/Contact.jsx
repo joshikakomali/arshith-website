@@ -39,7 +39,7 @@ export default function Contact() {
 
       {/* DETAILED INFO CARDS */}
       <section style={{ background: "var(--bg-dark)" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "30px" }} className="gsap-reveal">
+        <div className="grid-4-col gsap-reveal">
           {/* Card 1 */}
           <div className="service-card-luxury">
             <div className="service-card-icon">
@@ -91,7 +91,7 @@ export default function Contact() {
 
       {/* FORM AND DESCRIPTION */}
       <section className="light-contrast">
-        <div style={{ display: "grid", gridTemplateColumns: "1.2fr 0.8fr", gap: "60px", alignItems: "center" }} className="gsap-reveal">
+        <div className="grid-split-main gsap-reveal">
           <div>
             <span className="eyebrow">SEND MESSAGE</span>
             <h2 style={{ fontSize: "36px", color: "#0f172a", marginBottom: "20px" }}>Share Your Requirement</h2>

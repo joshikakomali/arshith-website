@@ -76,7 +76,7 @@ export default function Businesses() {
       {/* LISTED COMPANIES */}
       <section style={{ background: "var(--bg-dark)", marginTop: "2rem" }} className="gsap-reveal">
         <div className="container" style={{ padding: "2.5rem 0" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 420px", gap: "40px", alignItems: "center" }}>
+          <div className="businesses-hero-grid">
             <div>
               <span className="eyebrow">LISTED COMPANIES</span>
               <h2 style={{ fontSize: "28px", margin: "12px 0", color: "var(--text-main)" }}>Arshith Group Holdings</h2>
@@ -188,7 +188,7 @@ export default function Businesses() {
 
       {/* STATS DECK */}
       <section className="light-contrast">
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "30px", textAlign: "center" }} className="gsap-reveal">
+        <div className="grid-4-col gsap-reveal" style={{ textAlign: "center" }}>
           <div>
             <h2 style={{ fontSize: "48px", color: "var(--text-main)", marginBottom: "4px", fontWeight: 800 }}>100+</h2>
             <p style={{ color: "#111111", fontSize: "14px", textTransform: "uppercase", fontWeight: "600" }}>Products In Market</p>
@@ -210,7 +210,7 @@ export default function Businesses() {
 
       {/* VISION & VALUE SECTION */}
       <section style={{ background: "var(--bg-dark)", borderBottom: "none" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "60px", alignItems: "center" }} className="gsap-reveal">
+        <div className="grid-2-col gsap-reveal">
           <div style={{ borderRadius: "var(--radius-lg)", overflow: "hidden", height: "400px" }}>
             <img 
               src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070&auto=format&fit=crop" 

@@ -63,7 +63,7 @@ export default function About() {
 
       {/* STORY SECTION */}
       <section style={{ background: "var(--bg-dark)" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "60px", alignItems: "center" }} className="gsap-reveal">
+        <div className="grid-2-col gsap-reveal">
           <div style={{ position: "relative", borderRadius: "var(--radius-lg)", overflow: "hidden", height: "450px" }}>
             <img 
                src="/assests/group.png" 
@@ -91,7 +91,7 @@ export default function About() {
           <h2>Driven by Purpose &amp; Vision</h2>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "40px" }} className="gsap-reveal">
+        <div className="grid-2-col gsap-reveal">
           <div style={{ background: "#fff", border: "1px solid #e2e8f0", padding: "40px", borderRadius: "var(--radius-lg)" }}>
             <i className="ri-rocket-2-line" style={{ fontSize: "36px", color: "var(--accent)", marginBottom: "20px", display: "inline-block" }}></i>
             <h3 style={{ fontSize: "24px", marginBottom: "15px", color: "#0f172a" }}>Our Mission</h3>
@@ -117,7 +117,7 @@ export default function About() {
           <h2>Our Guiding Principles</h2>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "30px" }} className="gsap-reveal">
+        <div className="grid-3-col gsap-reveal">
           <div className="service-card-luxury">
             <div className="service-card-icon">
               <i className="ri-shield-check-line"></i>
@@ -261,7 +261,7 @@ export default function About() {
 
       {/* STATS SECTION */}
       <section style={{ background: "var(--bg-dark)", borderBottom: "none" }} className="gsap-reveal">
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "40px", textAlign: "center" }}>
+        <div className="grid-4-col" style={{ textAlign: "center" }}>
           <div>
             <h2 style={{ fontSize: "56px", color: "var(--accent)", marginBottom: "8px" }}>7+</h2>
             <p style={{ color: "var(--text-muted)", fontSize: "14px", textTransform: "uppercase" }}>Years of Operation</p>

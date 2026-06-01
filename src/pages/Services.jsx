@@ -155,7 +155,7 @@ export default function Services() {
 
       {/* STORYTELLING DETAIL SECTION */}
       <section style={{ background: "var(--bg-dark)", borderBottom: "none" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "60px", alignItems: "center" }} className="gsap-reveal">
+        <div className="grid-2-col gsap-reveal">
           <div>
             <span className="eyebrow">PARTNERSHIP VALUE</span>
             <h2 style={{ fontSize: "36px", marginBottom: "20px", color: "var(--text-main)" }}>Unlocking Exponential Growth Potential</h2>

@@ -84,11 +84,8 @@ export default function Industries() {
             return (
               <div 
                 key={ind.id} 
+                className="grid-2-col"
                 style={{ 
-                  display: "grid", 
-                  gridTemplateColumns: "1fr 1fr", 
-                  gap: "60px", 
-                  alignItems: "center",
                   direction: isEven ? "ltr" : "rtl"
                 }}
               >
@@ -133,7 +130,7 @@ export default function Industries() {
 
       {/* PARTNERSHIP HIGHLIGHTS */}
       <section className="light-contrast" style={{ borderBottom: "none" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "60px", alignItems: "center" }} className="gsap-reveal">
+        <div className="grid-2-col gsap-reveal">
           <div>
             <span className="eyebrow">COOPERATIVE VALUE</span>
             <h2 style={{ fontSize: "36px", marginBottom: "20px", color: "#0f172a" }}>Shaping Sustainable Supply Paradigms</h2>

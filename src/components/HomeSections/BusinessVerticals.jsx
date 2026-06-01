@@ -165,7 +165,7 @@ export default function BusinessVerticals() {
         ) : (
           /* Listed Companies - populated layout */
           <div className="gsap-reveal" style={{ padding: "1rem 0" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 360px", gap: "32px", alignItems: "center" }}>
+            <div className="verticals-listed-grid">
               <div>
                 <p style={{ color: "var(--text-muted)", marginBottom: "8px", fontWeight: 600 }}>Arshith Group Holdings</p>
                 <h3 style={{ margin: "6px 0 14px", color: "var(--text-main)" }}>Listed Companies</h3>

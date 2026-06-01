@@ -102,12 +102,8 @@ export default function Blog() {
 
         <Link 
           to={`/blog/${featuredPost.id}`} 
-          className="gsap-reveal"
+          className="grid-split-main gsap-reveal"
           style={{ 
-            display: "grid", 
-            gridTemplateColumns: "1.2fr 0.8fr", 
-            gap: "50px", 
-            alignItems: "center",
             background: "var(--bg-card)",
             border: "1px solid var(--border)",
             borderRadius: "var(--radius-lg)",

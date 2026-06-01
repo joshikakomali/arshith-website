@@ -91,7 +91,7 @@ export default function InternshipDetails() {
           <h2>Technical Skills &amp; DPR Training</h2>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "30px" }} className="gsap-reveal">
+        <div className="grid-3-col gsap-reveal">
           <div className="service-card-luxury">
             <span style={{ fontSize: "12px", color: "var(--accent)", fontWeight: "700" }}>MODULE 01</span>
             <h3 style={{ fontSize: "20px", margin: "10px 0" }}>DPR Documentation</h3>
@@ -144,7 +144,7 @@ export default function InternshipDetails() {
 
       {/* REGISTRATION & SECURE BILLING */}
       <section className="light-contrast">
-        <div style={{ display: "grid", gridTemplateColumns: "1.2fr 0.8fr", gap: "60px", alignItems: "center" }} className="gsap-reveal">
+        <div className="grid-split-main gsap-reveal">
           <div>
             <span className="eyebrow">SECURE PORTAL</span>
             <h2 style={{ fontSize: "36px", color: "#0f172a", marginBottom: "20px" }}>Placement-Oriented Enrollment</h2>

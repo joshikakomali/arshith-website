@@ -45,7 +45,7 @@ export default function Careers() {
           <h2>A Workplace That Inspires Growth</h2>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "30px" }} className="gsap-reveal">
+        <div className="grid-3-col gsap-reveal">
           <div className="service-card-luxury">
             <div className="service-card-icon">
               <i className="ri-rocket-line"></i>
@@ -120,7 +120,7 @@ export default function Careers() {
 
       {/* INTERNSHIP PROMOTION */}
       <section style={{ background: "var(--bg-dark)" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "60px", alignItems: "center" }} className="gsap-reveal">
+        <div className="grid-2-col gsap-reveal">
           <div style={{ borderRadius: "var(--radius-lg)", overflow: "hidden", height: "400px" }}>
             <img 
               src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1974&auto=format&fit=crop" 

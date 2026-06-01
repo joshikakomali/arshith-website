@@ -297,7 +297,7 @@
   font-family: var(--font-heading);
   font-size: 14px;
   font-weight: 700;
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.5); /* Semi-transparent white */
   display: flex;
   align-items: center;
   gap: 6px;
@@ -306,7 +306,7 @@
 }
 
 .activeNumber {
-  color: var(--accent);
+  color: #ffffff; /* Solid white */
 }
 
 .dot {
@@ -330,7 +330,7 @@
   top: 0;
   left: 0;
   height: 100%;
-  background: var(--accent);
+  background: #ffffff; /* Solid white */
   width: 100%;
   transform-origin: left;
   transform: scaleX(0);

@@ -85,7 +85,7 @@ export default function Internship() {
           <h2>Acquire High-Demand Capabilities</h2>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "30px" }} className="gsap-reveal">
+        <div className="grid-3-col gsap-reveal">
           <div style={{ background: "#fff", border: "1px solid #e2e8f0", padding: "40px", borderRadius: "var(--radius-lg)" }}>
             <div style={{ width: "50px", height: "50px", background: "rgba(37,99,235,0.08)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "20px", color: "var(--accent)", marginBottom: "20px" }}>
               <i className="ri-layout-4-line"></i>
@@ -119,7 +119,7 @@ export default function Internship() {
           <h2>Select Your Duration</h2>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "40px", maxWidth: "900px", margin: "0 auto" }} className="gsap-reveal">
+        <div className="internship-about-grid gsap-reveal">
           <div className="service-card-luxury" style={{ border: "1px solid var(--border)", position: "relative" }}>
             <h3 style={{ fontSize: "24px", color: "var(--accent)", marginBottom: "10px" }}>3 Months Program</h3>
             <span style={{ fontSize: "14px", color: "var(--text-muted)", display: "block", marginBottom: "20px" }}>Core Front-End Track</span>
@@ -135,7 +135,7 @@ export default function Internship() {
             <div style={{ borderTop: "1px solid var(--border)", paddingTop: "20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <div>
                 <span style={{ fontSize: "12px", color: "var(--text-muted)", display: "block" }}>REGISTRATION FEE</span>
-                <span style={{ fontSize: "22px", fontWeight: "700", color: "#fff" }}>₹1,250</span>
+                <span style={{ fontSize: "22px", fontWeight: "700", color: "var(--text-main)" }}>₹1,250</span>
               </div>
               <Link to="/internship-details" className="btn btn-secondary" style={{ padding: "10px 20px", fontSize: "13px" }}>Register</Link>
             </div>
@@ -157,7 +157,7 @@ export default function Internship() {
             <div style={{ borderTop: "1px solid var(--border)", paddingTop: "20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <div>
                 <span style={{ fontSize: "12px", color: "var(--text-muted)", display: "block" }}>REGISTRATION FEE</span>
-                <span style={{ fontSize: "22px", fontWeight: "700", color: "#fff" }}>₹1,999</span>
+                <span style={{ fontSize: "22px", fontWeight: "700", color: "var(--text-main)" }}>₹1,999</span>
               </div>
               <Link to="/internship-details" className="btn btn-primary" style={{ padding: "10px 20px", fontSize: "13px" }}>Register</Link>
             </div>
@@ -167,7 +167,7 @@ export default function Internship() {
 
       {/* CALL TO ACTION */}
       <section style={{ background: "var(--bg-dark)", borderBottom: "none" }} className="gsap-reveal">
-        <div style={{ display: "grid", gridTemplateColumns: "1.2fr 0.8fr", gap: "60px", alignItems: "center" }}>
+        <div className="grid-split-main">
           <div>
             <span className="eyebrow">ENROLL NOW</span>
             <h2 style={{ fontSize: "36px", marginBottom: "20px", color: "#fff" }}>Secure Your Seat in the Upcoming Batch</h2>
