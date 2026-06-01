@@ -157,13 +157,16 @@ export default function useHeroAnimation({
       const preTitle = textContainer.querySelector("span");
       const title = textContainer.querySelector("h1");
       const desc = textContainer.querySelector("p");
+      const mobileImage = textContainer.querySelector(".mobile-hero-image-wrap");
       const buttons = textContainer.querySelector(".hero-buttons");
 
+      const animTargets = [preTitle, title, desc, mobileImage, buttons].filter(Boolean);
+
       // initial states (pre-title slightly closer)
-      gsap.set([preTitle, title, desc, buttons], { opacity: 0, y: 36 });
+      gsap.set(animTargets, { opacity: 0, y: 36 });
 
       tl.to(
-        [preTitle, title, desc, buttons],
+        animTargets,
         {
           opacity: 1,
           y: 0,

@@ -203,6 +203,12 @@ export default function Hero() {
                 <span className={styles.preTitle}>{slide.preTitle}</span>
                 <h1 className={styles.title}>{slide.title}</h1>
                 <p className={styles.desc}>{slide.desc}</p>
+                
+                {/* Mobile-only brand image */}
+                <div className={`${styles.mobileSlideImage} mobile-hero-image-wrap`}>
+                  <img src={slide.midImage} alt={slide.preTitle} />
+                </div>
+
                 <div className={styles.btnContainer + " hero-buttons"}>
                   <Link to={slide.primaryLink} className={styles.primaryBtn}>
                     {slide.primaryBtnText}
