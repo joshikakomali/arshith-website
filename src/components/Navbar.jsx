@@ -104,32 +104,40 @@ export default function Navbar() {
 
       {/* Fullscreen Mobile Drawer */}
       <div className={`mobile-nav-panel ${isOpen ? "mobile-nav-panel-open" : ""}`}>
+        {/* Mobile Header Inside Drawer */}
+        <div className="mobile-menu-header">
+          <span className="mobile-menu-label">MENU</span>
+          <button className="mobile-menu-close" onClick={toggleMenu} aria-label="Close menu">
+            ✕
+          </button>
+        </div>
+
         <ul className="mobile-nav-links">
-          <li>
+          <li className="mobile-nav-item">
             <Link to="/" className={isActive("/") ? "active" : ""} onClick={toggleMenu}>Home</Link>
           </li>
-          <li>
+          <li className="mobile-nav-item">
             <Link to="/about" className={isActive("/about") ? "active" : ""} onClick={toggleMenu}>About</Link>
           </li>
-          <li>
+          <li className="mobile-nav-item">
             <Link to="/services" className={isActive("/services") ? "active" : ""} onClick={toggleMenu}>Services</Link>
           </li>
-          <li>
+          <li className="mobile-nav-item">
             <Link to="/portfolio" className={isActive("/portfolio") ? "active" : ""} onClick={toggleMenu}>Businesses</Link>
           </li>
-          <li>
+          <li className="mobile-nav-item">
             <Link to="/industries" className={isActive("/industries") ? "active" : ""} onClick={toggleMenu}>Industries</Link>
           </li>
-          <li>
+          <li className="mobile-nav-item">
             <Link to="/blog" className={isActive("/blog") ? "active" : ""} onClick={toggleMenu}>News</Link>
           </li>
-          <li>
+          <li className="mobile-nav-item">
             <Link to="/careers" className={isActive("/careers") ? "active" : ""} onClick={toggleMenu}>Careers</Link>
           </li>
-          <li>
+          <li className="mobile-nav-item">
             <Link to="/internship" className={isActive("/internship") ? "active" : ""} onClick={toggleMenu}>Internship</Link>
           </li>
-          <li>
+          <li className="mobile-nav-item">
             <Link to="/contact" className={isActive("/contact") ? "active" : ""} onClick={toggleMenu}>Contact</Link>
           </li>
         </ul>
