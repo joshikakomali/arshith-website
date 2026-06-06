@@ -26,6 +26,11 @@ import Blog from "./pages/Blog"; // NEW Blog Page
 import BlogDetail from "./pages/BlogDetail"; // NEW Blog Detail Page
 import Contact from "./pages/Contact";
 
+// Recruiter & Waiting Queue Pages
+import BookSlot from "./pages/BookSlot";
+import InterviewLobby from "./pages/InterviewLobby";
+import RecruiterDashboard from "./pages/RecruiterDashboard";
+
 function AnimatedRoutes() {
   return (
     <Routes>
@@ -41,6 +46,9 @@ function AnimatedRoutes() {
       <Route path="/careers" element={<Careers />} />
       <Route path="/internship" element={<Internship />} />
       <Route path="/internship-details" element={<InternshipDetails />} />
+      <Route path="/book-slot" element={<BookSlot />} />
+      <Route path="/interview/:token" element={<InterviewLobby />} />
+      <Route path="/recruiter" element={<RecruiterDashboard />} />
       <Route path="/blog" element={<Blog />} />
       <Route path="/blog/:id" element={<BlogDetail />} />
       <Route path="/contact" element={<Contact />} />

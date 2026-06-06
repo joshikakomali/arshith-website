@@ -32,11 +32,13 @@ export default function InternshipDetails() {
     formData.append("name", form.elements.name.value);
     formData.append("email", form.elements.email.value);
     formData.append("phone", form.elements.phone.value);
+    formData.append("college_name", form.elements.college_name.value);
     formData.append("degree", form.elements.degree.value);
-    formData.append("domain", form.elements.domain.value);
-    formData.append("months", form.elements.months.value);
+    formData.append("cgpa", form.elements.cgpa.value);
+    formData.append("role_applied", form.elements.role_applied.value);
+    formData.append("duration", form.elements.duration.value);
     formData.append("mode", form.elements.mode.value);
-    formData.append("comments", form.elements.comments.value);
+    formData.append("available_immediately", form.elements.available_immediately.value);
     formData.append("resume", file);
 
     const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5001";
@@ -48,12 +50,15 @@ export default function InternshipDetails() {
       });
 
       const data = await response.json();
-      alert(data.message);
-      form.reset();
-      setFileName("Attach PDF Resume Only");
+      if (response.ok) {
+        alert("Application Submitted Successfully! Redirecting to schedule your interview slot...");
+        window.location.href = `/book-slot?candidateId=${data.candidateId}`;
+      } else {
+        alert(data.message || "Failed to submit application");
+      }
     } catch (error) {
       console.error(error);
-      alert("Server Error - Ensure your backend server is running on port 5000");
+      alert("Server Error - Ensure your backend server is running on port 5001");
     }
   };
 
@@ -199,6 +204,12 @@ export default function InternshipDetails() {
                 <input type="tel" name="phone" placeholder="Phone Number" required />
               </div>
               <div className="form-group-luxury">
+                <input type="text" name="college_name" placeholder="College Name" required />
+              </div>
+            </div>
+
+            <div className="form-grid-2">
+              <div className="form-group-luxury">
                 <select name="degree" defaultValue="" required>
                   <option value="" disabled>Select Degree</option>
                   <option value="B.Tech">B.Tech / B.E</option>
@@ -208,36 +219,60 @@ export default function InternshipDetails() {
                   <option value="Other">Other Graduates</option>
                 </select>
               </div>
+              <div className="form-group-luxury">
+                <input type="text" name="cgpa" placeholder="CGPA (e.g. 8.5)" required />
+              </div>
             </div>
 
             <div className="form-grid-2">
               <div className="form-group-luxury">
-                <select name="domain" defaultValue="" required>
-                  <option value="" disabled>Select Domain</option>
+                <select name="role_applied" defaultValue="" required>
+                  <option value="" disabled>Applying For</option>
                   <option value="Web Development">Web Development</option>
                   <option value="Frontend Development">Frontend Development</option>
+                  <option value="Backend Development">Backend Development</option>
+                  <option value="Full Stack Development">Full Stack Development</option>
                   <option value="UI/UX Design">UI/UX Design</option>
                   <option value="Digital Marketing">Digital Marketing</option>
+                  <option value="SEO">SEO</option>
+                  <option value="Business Development">Business Development</option>
                 </select>
               </div>
               <div className="form-group-luxury">
-                <select name="months" defaultValue="" required>
+                <select name="duration" defaultValue="" required>
                   <option value="" disabled>Internship Duration</option>
-                  <option value="3 Months">3 Months Program (₹1,250)</option>
-                  <option value="6 Months">6 Months Program (₹1,999)</option>
+                  <option value="3 Months">3 Months Program</option>
+                  <option value="6 Months">6 Months Program</option>
                 </select>
               </div>
             </div>
 
-            <div className="form-group-luxury" style={{ marginBottom: "25px" }}>
-              <label style={{ fontSize: "14px", color: "var(--text-muted)", marginBottom: "10px", display: "block" }}>Internship Mode</label>
-              <div style={{ display: "flex", gap: "25px" }}>
-                <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", fontSize: "14px" }}>
-                  <input type="radio" name="mode" value="Paid" required style={{ width: "16px", height: "16px", accentColor: "var(--accent)" }} /> Paid Mode
-                </label>
-                <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", fontSize: "14px" }}>
-                  <input type="radio" name="mode" value="Unpaid" required style={{ width: "16px", height: "16px", accentColor: "var(--accent)" }} /> Unpaid Mode
-                </label>
+            <div className="form-grid-2" style={{ marginBottom: "25px" }}>
+              <div className="form-group-luxury">
+                <label style={{ fontSize: "14px", color: "var(--text-muted)", marginBottom: "8px", display: "block" }}>Internship Mode</label>
+                <div style={{ display: "flex", gap: "25px" }}>
+                  <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", fontSize: "14px" }}>
+                    <input type="radio" name="mode" value="Remote" required style={{ width: "16px", height: "16px", accentColor: "var(--accent)" }} /> Remote
+                  </label>
+                  <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", fontSize: "14px" }}>
+                    <input type="radio" name="mode" value="Hybrid" required style={{ width: "16px", height: "16px", accentColor: "var(--accent)" }} /> Hybrid
+                  </label>
+                  <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", fontSize: "14px" }}>
+                    <input type="radio" name="mode" value="On-site" required style={{ width: "16px", height: "16px", accentColor: "var(--accent)" }} /> On-site
+                  </label>
+                </div>
+              </div>
+
+              <div className="form-group-luxury">
+                <label style={{ fontSize: "14px", color: "var(--text-muted)", marginBottom: "8px", display: "block" }}>Available Immediately</label>
+                <div style={{ display: "flex", gap: "25px" }}>
+                  <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", fontSize: "14px" }}>
+                    <input type="radio" name="available_immediately" value="Yes" required style={{ width: "16px", height: "16px", accentColor: "var(--accent)" }} /> Yes
+                  </label>
+                  <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", fontSize: "14px" }}>
+                    <input type="radio" name="available_immediately" value="No" required style={{ width: "16px", height: "16px", accentColor: "var(--accent)" }} /> No
+                  </label>
+                </div>
               </div>
             </div>
 
@@ -256,10 +291,6 @@ export default function InternshipDetails() {
                   required
                 />
               </div>
-            </div>
-
-            <div className="form-group-luxury">
-              <textarea name="comments" placeholder="Comments or custom requests..." rows="5"></textarea>
             </div>
 
             <button type="submit" className="btn btn-primary" style={{ width: "100%", justifyContent: "center" }}>
