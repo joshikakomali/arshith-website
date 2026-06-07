@@ -115,15 +115,6 @@ export default function RecruiterDashboard() {
   };
 
   const handleAdmit = async (candidateId, slotId) => {
-    const customLink = window.prompt(
-      "Enter Google Meet Link for this candidate (leave blank or keep default prefix to auto-generate a fresh standard link):",
-      "https://meet.google.com/"
-    );
-    if (customLink === null) return; // Cancelled
-
-    const cleanLink = customLink.trim();
-    const finalLink = (cleanLink === "" || cleanLink === "https://meet.google.com/" || cleanLink === "https://meet.google.com") ? "" : cleanLink;
-
     try {
       const res = await fetch(`${apiUrl}/admit-candidate`, {
         method: "POST",
@@ -131,7 +122,7 @@ export default function RecruiterDashboard() {
           "Content-Type": "application/json",
           "x-passcode": passcode
         },
-        body: JSON.stringify({ candidateId, slotId, meetLink: finalLink })
+        body: JSON.stringify({ candidateId, slotId })
       });
       if (res.ok) {
         console.log("Candidate admitted.");
