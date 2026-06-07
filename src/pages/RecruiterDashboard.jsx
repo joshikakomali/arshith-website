@@ -547,8 +547,21 @@ export default function RecruiterDashboard() {
 
                         {/* IN_INTERVIEW status -> status conclusions */}
                         {c.status === "IN_INTERVIEW" && (
-                          <div style={{ display: "flex", gap: "8px", justifyContent: "flex-end" }}>
+                          <div style={{ display: "flex", gap: "8px", justifyContent: "flex-end", alignItems: "center" }}>
                             
+                            {/* Join Meet */}
+                            {c.meet_link && (
+                              <a 
+                                href={c.meet_link} 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                style={{ display: "inline-flex", alignItems: "center", textDecoration: "none", background: "#10b981", color: "#fff", padding: "6px 12px", borderRadius: "20px", fontSize: "11px", fontWeight: "700", cursor: "pointer" }}
+                              >
+                                <i className="ri-video-chat-line" style={{ marginRight: "4px" }}></i>
+                                Join Meet
+                              </a>
+                            )}
+
                             {/* Complete */}
                             <button 
                               onClick={() => handleConclude(c.candidate_id, c.slot_id, "COMPLETED")} 
