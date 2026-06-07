@@ -15,7 +15,8 @@ const memoryDb = {
   Recruiters: [
     { recruiter_id: 1, name: "Lead Recruiter", email: process.env.RECRUITER_EMAIL || "joshikakomali@gmail.com" }
   ],
-  Interview_Sessions: []
+  Interview_Sessions: [],
+  Recruiter_Settings: {}
 };
 
 // Seed In-Memory Slots (Today, Tomorrow, Day After)
@@ -556,6 +557,7 @@ async function getRecruiterDashboard() {
         candidate_email: candidate?.email,
         candidate_phone: candidate?.phone,
         role_applied: candidate?.role_applied,
+        resume_url: candidate?.resume_url || null,
         slot_id: booking.slot_id,
         slot_date: slot ? `${slot.date} ${slot.start_time} - ${slot.end_time}` : "N/A",
         join_time: queue?.join_time || null,
@@ -580,7 +582,7 @@ async function getRecruiterDashboard() {
 
   // Query MySQL
   const candidatesSql = `
-    SELECT b.booking_id, b.candidate_id, c.name as candidate_name, c.email as candidate_email, c.phone as candidate_phone, c.role_applied,
+    SELECT b.booking_id, b.candidate_id, c.name as candidate_name, c.email as candidate_email, c.phone as candidate_phone, c.role_applied, c.resume_url,
            b.slot_id, CONCAT(s.date, ' ', s.start_time, ' - ', s.end_time) as slot_date,
            q.join_time, q.position as queue_position,
            COALESCE(se.status, q.status, b.booking_status) as status,
@@ -823,6 +825,28 @@ async function deleteSlot(slot_id) {
   return true;
 }
 
+// 15. Get Setting
+async function getSetting(key) {
+  if (useFallback) {
+    return memoryDb.Recruiter_Settings[key] || null;
+  }
+  const [rows] = await pool.query("SELECT setting_value FROM Recruiter_Settings WHERE setting_key = ?", [key]);
+  return rows.length > 0 ? rows[0].setting_value : null;
+}
+
+// 16. Set Setting
+async function setSetting(key, value) {
+  if (useFallback) {
+    memoryDb.Recruiter_Settings[key] = value;
+    return true;
+  }
+  await pool.query(
+    "INSERT INTO Recruiter_Settings (setting_key, setting_value) VALUES (?, ?) ON DUPLICATE KEY UPDATE setting_value = ?",
+    [key, value, value]
+  );
+  return true;
+}
+
 module.exports = {
   initDb,
   createCandidate,
@@ -839,5 +863,7 @@ module.exports = {
   completeInterview,
   createSlot,
   deleteSlot,
+  getSetting,
+  setSetting,
   useFallback: () => useFallback
 };

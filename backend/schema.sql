@@ -78,3 +78,10 @@ CREATE TABLE IF NOT EXISTS Interview_Sessions (
   FOREIGN KEY (slot_id) REFERENCES Interview_Slots(slot_id) ON DELETE CASCADE,
   FOREIGN KEY (recruiter_id) REFERENCES Recruiters(recruiter_id) ON DELETE SET NULL
 );
+
+-- 7. Recruiter_Settings Table
+CREATE TABLE IF NOT EXISTS Recruiter_Settings (
+  setting_key VARCHAR(50) PRIMARY KEY,
+  setting_value TEXT
+);
+

@@ -445,8 +445,9 @@ app.post("/admit-candidate", protectRecruiter, async (req, res) => {
       return res.status(400).json({ message: "candidateId and slotId are required" });
     }
 
-    // Google Meet Link (from request, environment template, or dynamically generated)
-    const meetLink = customMeetLink || process.env.MEET_LINK_TEMPLATE || generateMeetLink();
+    // Google Meet Link (from request, database setting, environment template, or dynamically generated)
+    const dbMeetLink = await db.getSetting("default_meet_link");
+    const meetLink = customMeetLink || dbMeetLink || process.env.MEET_LINK_TEMPLATE || generateMeetLink();
 
     const session = await db.admitCandidate({
       candidate_id: candidateId,
@@ -477,6 +478,33 @@ app.post("/admit-candidate", protectRecruiter, async (req, res) => {
   } catch (error) {
     console.error("Admit candidate error:", error);
     res.status(500).json({ message: "Server error admitting candidate" });
+  }
+});
+
+// 8b. GET /recruiter/settings - Get settings (like default Google Meet link)
+app.get("/recruiter/settings", protectRecruiter, async (req, res) => {
+  try {
+    const dbMeetLink = await db.getSetting("default_meet_link");
+    const defaultMeetLink = dbMeetLink || process.env.MEET_LINK_TEMPLATE || "";
+    res.json({ default_meet_link: defaultMeetLink });
+  } catch (error) {
+    console.error("Get settings error:", error);
+    res.status(500).json({ message: "Server error loading settings" });
+  }
+});
+
+// 8c. POST /recruiter/settings - Save settings (like default Google Meet link)
+app.post("/recruiter/settings", protectRecruiter, async (req, res) => {
+  try {
+    const { default_meet_link } = req.body;
+    if (default_meet_link === undefined) {
+      return res.status(400).json({ message: "default_meet_link is required" });
+    }
+    await db.setSetting("default_meet_link", default_meet_link.trim());
+    res.json({ message: "Settings saved successfully" });
+  } catch (error) {
+    console.error("Save settings error:", error);
+    res.status(500).json({ message: "Server error saving settings" });
   }
 });
 

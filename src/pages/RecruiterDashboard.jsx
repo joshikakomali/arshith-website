@@ -17,6 +17,11 @@ export default function RecruiterDashboard() {
   const [newSlot, setNewSlot] = useState({ date: "", start_time: "", end_time: "", capacity: 5 });
   const [showSlotPanel, setShowSlotPanel] = useState(false);
 
+  // Google Meet Settings
+  const [defaultMeetLink, setDefaultMeetLink] = useState("");
+  const [showSettingsPanel, setShowSettingsPanel] = useState(false);
+  const [savingSettings, setSavingSettings] = useState(false);
+
   const socketRef = useRef(null);
   const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5001";
 
@@ -34,6 +39,7 @@ export default function RecruiterDashboard() {
     // Fetch initial data
     fetchDashboardData();
     fetchSlotsData();
+    fetchSettingsData();
 
     // Setup Socket
     const socket = io(apiUrl);
@@ -101,7 +107,6 @@ export default function RecruiterDashboard() {
       console.error("Error fetching dashboard data:", err);
     }
   };
-
   const fetchSlotsData = async () => {
     try {
       const res = await fetch(`${apiUrl}/slots`);
@@ -113,6 +118,48 @@ export default function RecruiterDashboard() {
       console.error("Error fetching slots:", err);
     }
   };
+
+  const fetchSettingsData = async () => {
+    try {
+      const res = await fetch(`${apiUrl}/recruiter/settings`, {
+        headers: { "x-passcode": passcode }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setDefaultMeetLink(data.default_meet_link);
+      }
+    } catch (err) {
+      console.error("Error fetching settings:", err);
+    }
+  };
+
+  const handleSaveSettings = async (e) => {
+    e.preventDefault();
+    setSavingSettings(true);
+    try {
+      const res = await fetch(`${apiUrl}/recruiter/settings`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-passcode": passcode
+        },
+        body: JSON.stringify({ default_meet_link: defaultMeetLink })
+      });
+      if (res.ok) {
+        alert("Google Meet Link saved successfully!");
+        setShowSettingsPanel(false);
+      } else {
+        const errData = await res.json();
+        alert(errData.message || "Failed to save settings");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error saving settings.");
+    } finally {
+      setSavingSettings(false);
+    }
+  };
+
 
   const handleAdmit = async (candidateId, slotId) => {
     try {
@@ -277,9 +324,14 @@ export default function RecruiterDashboard() {
             {socketConnected ? "Real-time Live Sync" : "Syncing..."}
           </div>
 
-          <button onClick={() => setShowSlotPanel(!showSlotPanel)} className="btn btn-secondary" style={{ padding: "10px 20px", fontSize: "13px" }}>
+          <button onClick={() => { setShowSlotPanel(!showSlotPanel); setShowSettingsPanel(false); }} className="btn btn-secondary" style={{ padding: "10px 20px", fontSize: "13px" }}>
             <i className="ri-calendar-event-line" style={{ marginRight: "4px" }}></i>
             Manage Slots
+          </button>
+
+          <button onClick={() => { setShowSettingsPanel(!showSettingsPanel); setShowSlotPanel(false); }} className="btn btn-secondary" style={{ padding: "10px 20px", fontSize: "13px" }}>
+            <i className="ri-settings-4-line" style={{ marginRight: "4px" }}></i>
+            Meet Link Settings
           </button>
 
           <button onClick={handleLogout} className="btn btn-secondary" style={{ padding: "10px 20px", fontSize: "13px", borderColor: "rgba(239,68,68,0.3)", color: "#ef4444" }}>
@@ -287,6 +339,37 @@ export default function RecruiterDashboard() {
           </button>
         </div>
       </div>
+
+      {/* Google Meet Settings Dialog/Drawer */}
+      {showSettingsPanel && (
+        <div style={{ background: "#fff", border: "1px solid var(--border)", borderRadius: "var(--radius-lg)", padding: "30px", marginBottom: "35px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid var(--border)", paddingBottom: "15px", marginBottom: "20px" }}>
+            <h3 style={{ fontSize: "20px", color: "var(--text-main)" }}>Google Meet Configuration</h3>
+            <button onClick={() => setShowSettingsPanel(false)} style={{ border: "none", background: "none", fontSize: "18px", cursor: "pointer", color: "var(--text-muted)" }}>✕</button>
+          </div>
+
+          <form onSubmit={handleSaveSettings} style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+            <p style={{ fontSize: "14px", color: "var(--text-muted)", margin: 0 }}>
+              Specify the default/persistent Google Meet link to be used when admitting candidates.
+            </p>
+            <div className="form-group-luxury" style={{ maxWidth: "600px" }}>
+              <input 
+                type="url" 
+                placeholder="https://meet.google.com/abc-defg-hij"
+                value={defaultMeetLink} 
+                onChange={(e) => setDefaultMeetLink(e.target.value)} 
+                required 
+                style={{ width: "100%" }}
+              />
+            </div>
+            <div>
+              <button type="submit" className="btn btn-primary" style={{ padding: "10px 24px" }} disabled={savingSettings}>
+                {savingSettings ? "Saving Settings..." : "Save Configuration"}
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
 
       {/* Slots Management Dialog/Drawer */}
       {showSlotPanel && (
@@ -465,21 +548,11 @@ export default function RecruiterDashboard() {
                         <a 
                           href={`${apiUrl}${c.meet_link ? "" : ""}`} // fallback resume link
                           onClick={(e) => {
-                            // If resume is PDF, open in new tab
                             e.preventDefault();
-                            if (c.candidate_id) {
-                              // Let's retrieve candidate to open resume URL
-                              fetch(`${apiUrl}/recruiter/dashboard?passcode=${passcode}`)
-                                .then(res => res.json())
-                                .then(data => {
-                                  const cand = data.candidates.find(item => item.candidate_id === c.candidate_id);
-                                  if (cand && cand.meet_link) {
-                                    // wait, let's open the candidate resume
-                                  }
-                                });
-                              
-                              // We can open the resume in a new window:
-                              window.open(`${apiUrl}/uploads/resume-${c.candidate_id}.pdf`, "_blank");
+                            if (c.resume_url) {
+                              window.open(`${apiUrl}${c.resume_url}`, "_blank");
+                            } else {
+                              alert("Resume not found for this candidate.");
                             }
                           }}
                           style={{ fontSize: "11px", color: "var(--accent)", textDecoration: "underline", cursor: "pointer" }}
