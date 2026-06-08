@@ -21,4 +21,7 @@ dist-ssr
 *.ntvs*
 *.njsproj
 *.sln
-*.sw?
+# Credentials / Private keys
+backend/*.json
+!backend/package.json
+!backend/package-lock.json

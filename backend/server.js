@@ -12,6 +12,7 @@ require("dotenv").config({ path: path.join(__dirname, ".env") });
 
 const db = require("./database");
 const emailTemplates = require("./emailTemplates");
+const googleCalendar = require("./googleCalendar");
 
 const app = express();
 const server = http.createServer(app);
@@ -259,23 +260,57 @@ app.post("/book-slot", async (req, res) => {
 
     const recruiterEmail = process.env.RECRUITER_EMAIL || "joshikakomali@gmail.com";
     const slotDetailsStr = `${slot.date} at ${slot.start_time} - ${slot.end_time}`;
+    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+    const interviewLink = `${frontendUrl}/interview/${token}`;
+
+    // Create Google Calendar event with configured Meet link
+    const { createCalendarEvent } = require("./googleCalendar");
+    let meetLink = null;
+    try {
+      const dbMeetLink = await db.getSetting("default_meet_link");
+      const activeMeetLink = dbMeetLink || process.env.MEET_LINK_TEMPLATE || "https://meet.google.com/wko-xhsi-dei";
+
+      const calendarResult = await createCalendarEvent({
+        candidateName: candidate.name,
+        candidateEmail: candidate.email,
+        date: slot.date,
+        startTime: slot.start_time,
+        endTime: slot.end_time,
+        candidatePhone: candidate.phone,
+        roleApplied: candidate.role_applied,
+        lobbyUrl: interviewLink,
+        meetLink: activeMeetLink
+      });
+
+      if (calendarResult && calendarResult.meetLink) {
+        meetLink = calendarResult.meetLink;
+        console.log("[SERVER] Google Calendar event created. Meet link:", meetLink);
+        
+        // Save the Google Meet link in the database
+        await db.upsertInterviewSession({
+          candidate_id: candidateId,
+          slot_id: slotId,
+          meet_link: meetLink,
+          status: "SCHEDULED"
+        });
+      }
+    } catch (calErr) {
+      console.error("[SERVER] Google Calendar sync failed (ignoring to allow booking):", calErr.message);
+    }
 
     // Recruiter notification email
     await sendNotificationEmail({
       to: recruiterEmail,
       subject: `Interview Slot Selected: ${candidate.name}`,
-      message: `Dear Recruiter,\n\nA candidate has booked an interview slot.\n\nCandidate Name: ${candidate.name}\nSelected Slot: ${slotDetailsStr}`,
+      message: `Dear Recruiter,\n\nA candidate has booked an interview slot.\n\nCandidate Name: ${candidate.name}\nSelected Slot: ${slotDetailsStr}\nMeet Link: ${meetLink || "Not generated yet"}`,
       html: emailTemplates.getRecruiterSlotSelectedTemplate(candidate.name, candidate.email, candidate.role_applied, slot.date, slot.start_time, slot.end_time)
     });
 
     // Candidate confirmation email
-    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
-    const interviewLink = `${frontendUrl}/interview/${token}`;
-    
     await sendNotificationEmail({
       to: candidate.email,
       subject: "Interview Slot Booking Confirmation - Arshith Group",
-      message: `Dear ${candidate.name},\n\nYour interview has been scheduled for ${slotDetailsStr}.\n\nAccess Link: ${interviewLink}`,
+      message: `Dear ${candidate.name},\n\nYour interview has been scheduled for ${slotDetailsStr}.\n\nAccess Link: ${interviewLink}\nMeet Link: ${meetLink || "Will be shared when admitted"}`,
       html: emailTemplates.getBookingConfirmationTemplate(candidate.name, slot.date, slot.start_time, slot.end_time, interviewLink)
     });
 
@@ -285,7 +320,8 @@ app.post("/book-slot", async (req, res) => {
     res.json({
       message: "Slot booked successfully",
       token,
-      interviewLink
+      interviewLink,
+      meetLink
     });
   } catch (error) {
     console.error("Book slot error:", error);
@@ -445,9 +481,23 @@ app.post("/admit-candidate", protectRecruiter, async (req, res) => {
       return res.status(400).json({ message: "candidateId and slotId are required" });
     }
 
-    // Google Meet Link (from request, database setting, environment template, or dynamically generated)
+    // Check if there is a pre-generated Meet link from the Google Calendar event
+    let preGeneratedMeetLink = null;
+    try {
+      const dashboardData = await db.getRecruiterDashboard();
+      const candInfo = dashboardData.candidates.find(
+        (c) => c.candidate_id === parseInt(candidateId) && c.slot_id === parseInt(slotId)
+      );
+      if (candInfo && candInfo.meet_link) {
+        preGeneratedMeetLink = candInfo.meet_link;
+      }
+    } catch (e) {
+      console.error("[SERVER] Failed to retrieve pre-generated meet link:", e.message);
+    }
+
+    // Google Meet Link (from request, pre-generated calendar link, database setting, environment template, or dynamically generated)
     const dbMeetLink = await db.getSetting("default_meet_link");
-    const meetLink = customMeetLink || dbMeetLink || process.env.MEET_LINK_TEMPLATE || generateMeetLink();
+    const meetLink = customMeetLink || preGeneratedMeetLink || dbMeetLink || process.env.MEET_LINK_TEMPLATE || generateMeetLink();
 
     const session = await db.admitCandidate({
       candidate_id: candidateId,

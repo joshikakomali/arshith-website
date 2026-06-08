@@ -847,6 +847,60 @@ async function setSetting(key, value) {
   return true;
 }
 
+// 17. Upsert Interview Session
+async function upsertInterviewSession({ candidate_id, slot_id, meet_link, status }) {
+  const cid = parseInt(candidate_id);
+  const sid = parseInt(slot_id);
+  const sessionStatus = status || "SCHEDULED";
+
+  if (useFallback) {
+    let session = memoryDb.Interview_Sessions.find((s) => s.candidate_id === cid && s.slot_id === sid);
+    if (!session) {
+      session = {
+        session_id: memoryDb.Interview_Sessions.length + 1,
+        candidate_id: cid,
+        slot_id: sid,
+        recruiter_id: null,
+        meet_link,
+        start_time: null,
+        end_time: null,
+        status: sessionStatus
+      };
+      memoryDb.Interview_Sessions.push(session);
+    } else {
+      if (meet_link) session.meet_link = meet_link;
+      session.status = sessionStatus;
+    }
+    return session;
+  }
+
+  const connection = await pool.getConnection();
+  try {
+    const [sessions] = await connection.query(
+      "SELECT * FROM Interview_Sessions WHERE candidate_id = ? AND slot_id = ?",
+      [cid, sid]
+    );
+
+    if (sessions.length === 0) {
+      await connection.query(
+        "INSERT INTO Interview_Sessions (candidate_id, slot_id, meet_link, status) VALUES (?, ?, ?, ?)",
+        [cid, sid, meet_link, sessionStatus]
+      );
+    } else {
+      await connection.query(
+        "UPDATE Interview_Sessions SET meet_link = COALESCE(?, meet_link), status = ? WHERE candidate_id = ? AND slot_id = ?",
+        [meet_link, sessionStatus, cid, sid]
+      );
+    }
+    return true;
+  } catch (error) {
+    console.error("Error upserting interview session:", error);
+    throw error;
+  } finally {
+    connection.release();
+  }
+}
+
 module.exports = {
   initDb,
   createCandidate,
@@ -865,5 +919,7 @@ module.exports = {
   deleteSlot,
   getSetting,
   setSetting,
+  upsertInterviewSession,
   useFallback: () => useFallback
 };
+
