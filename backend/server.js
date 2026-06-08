@@ -95,7 +95,7 @@ function generateMeetLink() {
 }
 
 // Helper to send email (fails gracefully with detailed console logging)
-async function sendNotificationEmail({ to, subject, message, html }) {
+async function sendNotificationEmail({ to, subject, message, html, icalEvent }) {
   console.log(`\n================== EMAIL OUTBOX ==================`);
   console.log(`To:      ${to}`);
   console.log(`Subject: ${subject}`);
@@ -103,6 +103,9 @@ async function sendNotificationEmail({ to, subject, message, html }) {
     console.log(`HTML Email: YES (Check console/client for templates)`);
   } else {
     console.log(`Message:\n${message}`);
+  }
+  if (icalEvent) {
+    console.log(`Calendar Invite: YES (.ics attachment included)`);
   }
   console.log(`==================================================\n`);
 
@@ -114,14 +117,31 @@ async function sendNotificationEmail({ to, subject, message, html }) {
       text: message,
       html: html || undefined
     };
-    if (html) {
-      mailOptions.attachments = [
+
+    if (icalEvent) {
+      mailOptions.alternatives = [
         {
-          filename: 'logo.png',
-          path: path.join(__dirname, '../public/assests/logo.png'),
-          cid: 'logo'
+          contentType: "text/calendar; charset=utf-8; method=REQUEST",
+          content: icalEvent
         }
       ];
+      mailOptions.attachments = [
+        {
+          filename: "invite.ics",
+          content: icalEvent,
+          contentType: "application/ics"
+        }
+      ];
+    } else {
+      mailOptions.attachments = [];
+    }
+
+    if (html) {
+      mailOptions.attachments.push({
+        filename: 'logo.png',
+        path: path.join(__dirname, '../public/assests/logo.png'),
+        cid: 'logo'
+      });
     }
     await transporter.sendMail(mailOptions);
     console.log(`[EMAIL SUCCESS] Email sent to ${to}`);
@@ -298,12 +318,85 @@ app.post("/book-slot", async (req, res) => {
       console.error("[SERVER] Google Calendar sync failed (ignoring to allow booking):", calErr.message);
     }
 
+    // Generate iCal ICS invite string for candidate and recruiter
+    let icsContent = null;
+    try {
+      const activeMeetLink = meetLink || process.env.MEET_LINK_TEMPLATE || "https://meet.google.com/wko-xhsi-dei";
+      
+      const formatICSDate = (dateVal, timeVal) => {
+        let baseDateStr = "";
+        if (dateVal instanceof Date) {
+          const y = dateVal.getFullYear();
+          const m = String(dateVal.getMonth() + 1).padStart(2, "0");
+          const d = String(dateVal.getDate()).padStart(2, "0");
+          baseDateStr = `${y}-${m}-${d}`;
+        } else {
+          baseDateStr = String(dateVal).substring(0, 10);
+        }
+        
+        const localDateTimeStr = `${baseDateStr}T${timeVal}+05:30`;
+        const dObj = new Date(localDateTimeStr);
+        
+        const pad = (num) => String(num).padStart(2, "0");
+        const y = dObj.getUTCFullYear();
+        const m = pad(dObj.getUTCMonth() + 1);
+        const d = pad(dObj.getUTCDate());
+        const hh = pad(dObj.getUTCHours());
+        const mm = pad(dObj.getUTCMinutes());
+        const ss = pad(dObj.getUTCSeconds());
+        return `${y}${m}${d}T${hh}${mm}${ss}Z`;
+      };
+
+      const dtStart = formatICSDate(slot.date, slot.start_time);
+      const dtEnd = formatICSDate(slot.date, slot.end_time);
+      
+      const formatStampDate = (dateObj) => {
+        const pad = (num) => String(num).padStart(2, "0");
+        const y = dateObj.getUTCFullYear();
+        const m = pad(dateObj.getUTCMonth() + 1);
+        const d = pad(dateObj.getUTCDate());
+        const hh = pad(dateObj.getUTCHours());
+        const mm = pad(dateObj.getUTCMinutes());
+        const ss = pad(dateObj.getUTCSeconds());
+        return `${y}${m}${d}T${hh}${mm}${ss}Z`;
+      };
+      const dtStamp = formatStampDate(new Date());
+
+      icsContent = [
+        "BEGIN:VCALENDAR",
+        "VERSION:2.0",
+        "PRODID:-//Arshith Group//Interview Scheduler//EN",
+        "METHOD:REQUEST",
+        "BEGIN:VEVENT",
+        `UID:interview-${candidateId}-${slotId}-${Date.now()}@arshith-website`,
+        `DTSTAMP:${dtStamp}`,
+        `DTSTART:${dtStart}`,
+        `DTEND:${dtEnd}`,
+        `SUMMARY:Interview: ${candidate.name} - Arshith Group`,
+        `DESCRIPTION:Candidate Details:\\n- Name: ${candidate.name}\\n- Email: ${candidate.email}\\n- Phone: ${candidate.phone || "N/A"}\\n- Role Applied: ${candidate.role_applied || "N/A"}\\n\\nAccess Details:\\n- Lobby Link: ${interviewLink}\\n- Join Google Meet: ${activeMeetLink}\\n\\nEnsure camera and microphone are functional before joining.`,
+        `LOCATION:${activeMeetLink}`,
+        `ORGANIZER;CN="Recruitment Panel":mailto:${recruiterEmail}`,
+        "STATUS:CONFIRMED",
+        "SEQUENCE:0",
+        "BEGIN:VALARM",
+        "TRIGGER:-PT15M",
+        "ACTION:DISPLAY",
+        "DESCRIPTION:Reminder",
+        "END:VALARM",
+        "END:VEVENT",
+        "END:VCALENDAR"
+      ].join("\r\n");
+    } catch (icsErr) {
+      console.error("[SERVER] Failed to generate ICS calendar file:", icsErr.message);
+    }
+
     // Recruiter notification email
     await sendNotificationEmail({
       to: recruiterEmail,
       subject: `Interview Slot Selected: ${candidate.name}`,
       message: `Dear Recruiter,\n\nA candidate has booked an interview slot.\n\nCandidate Name: ${candidate.name}\nSelected Slot: ${slotDetailsStr}\nMeet Link: ${meetLink || "Not generated yet"}`,
-      html: emailTemplates.getRecruiterSlotSelectedTemplate(candidate.name, candidate.email, candidate.role_applied, slot.date, slot.start_time, slot.end_time)
+      html: emailTemplates.getRecruiterSlotSelectedTemplate(candidate.name, candidate.email, candidate.role_applied, slot.date, slot.start_time, slot.end_time),
+      icalEvent: icsContent
     });
 
     // Candidate confirmation email
@@ -311,7 +404,8 @@ app.post("/book-slot", async (req, res) => {
       to: candidate.email,
       subject: "Interview Slot Booking Confirmation - Arshith Group",
       message: `Dear ${candidate.name},\n\nYour interview has been scheduled for ${slotDetailsStr}.\n\nAccess Link: ${interviewLink}\nMeet Link: ${meetLink || "Will be shared when admitted"}`,
-      html: emailTemplates.getBookingConfirmationTemplate(candidate.name, slot.date, slot.start_time, slot.end_time, interviewLink)
+      html: emailTemplates.getBookingConfirmationTemplate(candidate.name, slot.date, slot.start_time, slot.end_time, interviewLink),
+      icalEvent: icsContent
     });
 
     // Notify recruiter dashboard in real-time

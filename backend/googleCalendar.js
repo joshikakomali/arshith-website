@@ -49,10 +49,30 @@ async function createCalendarEvent({
   const calendar = google.calendar({ version: "v3", auth: jwtClient });
   const recruiterEmail = process.env.RECRUITER_EMAIL || "joshikakomali@gmail.com";
   const finalMeetLink = meetLink || process.env.MEET_LINK_TEMPLATE || "https://meet.google.com/wko-xhsi-dei";
+  // Format Date to YYYY-MM-DD
+  let dateStr = date;
+  if (date instanceof Date) {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, "0");
+    const d = String(date.getDate()).padStart(2, "0");
+    dateStr = `${y}-${m}-${d}`;
+  } else if (typeof date === "string") {
+    if (/^\d{4}-\d{2}-\d{2}/.test(date)) {
+      dateStr = date.substring(0, 10);
+    } else {
+      const parsed = new Date(date);
+      if (!isNaN(parsed.getTime())) {
+        const y = parsed.getFullYear();
+        const m = String(parsed.getMonth() + 1).padStart(2, "0");
+        const d = String(parsed.getDate()).padStart(2, "0");
+        dateStr = `${y}-${m}-${d}`;
+      }
+    }
+  }
 
   // Build standard RFC3339 datetime strings (format: YYYY-MM-DDTHH:MM:SS) with +05:30 offset
-  const startDateTime = `${date}T${startTime}+05:30`;
-  const endDateTime = `${date}T${endTime}+05:30`;
+  const startDateTime = `${dateStr}T${startTime}+05:30`;
+  const endDateTime = `${dateStr}T${endTime}+05:30`;
 
   const event = {
     summary: `Interview: ${candidateName} - Arshith Group`,
